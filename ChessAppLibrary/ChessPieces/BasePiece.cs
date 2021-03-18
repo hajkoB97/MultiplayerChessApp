@@ -1,7 +1,5 @@
 ﻿using ChessAppLibrary.Chess.ChessPieces;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace ChessAppLibrary.ChessPieces
 {
@@ -9,7 +7,7 @@ namespace ChessAppLibrary.ChessPieces
     {
         protected IChessBoard chessBoard;
 
-        public ChessPieceType Type { get; protected set; } 
+        public ChessPieceType Type { get; protected set; }
         public ChessPieceColor Color { get; protected set; }
 
         public (int, int) Coords
@@ -17,23 +15,23 @@ namespace ChessAppLibrary.ChessPieces
             get;
             set;
         }
-        
+
         public abstract List<(int, int)> GetValidMoveIndicies();
-        
-        ///TODO Checking if King is in Check ot would be after move, 
+
+        ///TODO Checking if King is in Check or would be after move, 
         public virtual bool AttemptMove(int colIndex, int rowIndex)
         {
             if (GetValidMoveIndicies().Contains((colIndex, rowIndex)))
             {
-                chessBoard.ChessBoardUI.MovePieceImageToPosition(this,colIndex, rowIndex);
+                chessBoard.ChessBoardUI.MovePieceImageToPosition(this, colIndex, rowIndex);
                 chessBoard.Board[Coords.Item1, Coords.Item2] = null;
                 chessBoard.Board[colIndex, rowIndex] = this;
-                Coords = (colIndex,rowIndex);
+                Coords = (colIndex, rowIndex);
                 return true;
             }
 
             return false;
-            
+
 
         }
 
@@ -44,7 +42,7 @@ namespace ChessAppLibrary.ChessPieces
             int colIndex;
             int rowIndex;
 
-            foreach( var element in validMoves)
+            foreach (var element in validMoves)
             {
                 colIndex = element.Item1;
                 rowIndex = element.Item2;
@@ -54,7 +52,8 @@ namespace ChessAppLibrary.ChessPieces
                 if (testedPiece != null && testedPiece.Color != Color)
                 {
                     enemy = true;
-                } else
+                }
+                else
                 {
                     enemy = false;
                 }

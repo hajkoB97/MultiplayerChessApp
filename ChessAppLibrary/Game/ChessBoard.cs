@@ -1,10 +1,6 @@
 ﻿using ChessAppLibrary.Chess.ChessPieces;
-using MultiplayerChessApp;
 using MultiplayerChessAppUI;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
 
 namespace ChessAppLibrary.Chess
 {
@@ -16,15 +12,17 @@ namespace ChessAppLibrary.Chess
         private IChessPiece SelectedPiece;
 
         private Game game;
+
         public ChessBoard(IChessBoardUIControl chessBoardUI, Game game)
         {
             this.ChessBoardUI = chessBoardUI;
             Board = new IChessPiece[8, 8];
             this.game = game;
             ChessBoardUI.ChessPieceImageClicked += SquareClicked;
+
         }
 
-        private void SquareClicked(object sender, ChessPieceImageClickedArgs e)
+        private void SquareClicked(object sender, BoardTileClickedArgs e)
         {
 
             IChessPiece piece = Board[e.ColIndex, e.RowIndex];
@@ -40,25 +38,40 @@ namespace ChessAppLibrary.Chess
             if (SelectedPiece != null)
             {
 
+                (int, int) fromCoords = SelectedPiece.Coords;
+
+
                 bool moved = SelectedPiece.AttemptMove(e.ColIndex, e.RowIndex);
                 ChessBoardUI.RemoveMoveIndicators();
+                if (moved)
+                {
+                    (int, int) toCoords = SelectedPiece.Coords;
+                    game.SendMoveAction(fromCoords, toCoords);
+
+
+                }
                 SelectedPiece = null;
-                
-                //int x = SelectedPiece.Coords.Item1;
-                //int y = SelectedPiece.Coords.Item2;
-                //if(moved)
-                //{
-                //    ChessBoardUI.MovePieceImageToPosition(Board[x, 7 - y],e.ColIndex, 7 - e.RowIndex);
-                //    Board[e.ColIndex, 7 - e.RowIndex] = Board[x, 7 - y];
-                //    Board[x, 7-y] = null;
-                //    Board[e.ColIndex, 7 - e.RowIndex].Coords = (e.ColIndex, 7 - e.RowIndex);
-                //}
+
+
             }
-            
+
 
         }
 
-        
+        public void MovePiece((int, int) from, (int, int) to)
+        {
+            int x = from.Item1;
+            int y = from.Item2;
+
+            int newX = to.Item1;
+            int newY = to.Item2;
+
+            ChessBoardUI.MovePieceImageToPosition(Board[x, 7 - y], newX, 7 - newY);
+            Board[newX, 7 - newY] = Board[x, 7 - y];
+            Board[x, 7 - y] = null;
+            Board[newX, 7 - newY].Coords = (newX, 7 - newY);
+        }
+
         private bool CanPlayerSelectPiece(IChessPiece piece)
         {
             if (piece == null || !game.GameInstancePlayer.ChessPieces.Contains(piece)) return false;
@@ -85,7 +98,7 @@ namespace ChessAppLibrary.Chess
         {
             this.Board[colIndex, rowIndex] = piece;
             piece.Coords = (colIndex, rowIndex);
-            ChessBoardUI.PlaceChessPieceImage(piece,colIndex,rowIndex);
+            ChessBoardUI.PlaceChessPieceImage(piece, colIndex, rowIndex);
         }
     }
 }

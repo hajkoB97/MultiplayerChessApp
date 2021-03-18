@@ -9,7 +9,7 @@ namespace MultiplayerChessApp
 
         public (int, int) Indecies { get; private set; }
 
-        public ChessPieceMovedEventArgs(IChessPiece piece, (int,int) indecies)
+        public ChessPieceMovedEventArgs(IChessPiece piece, (int, int) indecies)
         {
             this.Piece = piece;
             this.Indecies = indecies;

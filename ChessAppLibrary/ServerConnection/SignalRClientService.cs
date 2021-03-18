@@ -4,53 +4,62 @@
 
 using Microsoft.AspNetCore.SignalR.Client;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace ChessAppLibrary.ServerConnection
 {
-    public class SignalRClientService : IServerConnectionService
+    public class SignalRClientService : IServerConnection
     {
         public HubConnection Connection { get; }
-        public event EventHandler<GameFoundArgs> GameFound;
-        public event EventHandler GameNotFound;
-
+        public PlayerActionReciver ActionReciever { get; private set; }
+        private static readonly object padlock = new object();
+        private static SignalRClientService _instance;
+        public static SignalRClientService Instance
+        {
+            get
+            {
+                lock (padlock) ;
+                if (_instance == null)
+                {
+                    _instance = new SignalRClientService();
+                }
+                return _instance;
+            }
+        }
 
         public SignalRClientService()
         {
-
             Connection = new HubConnectionBuilder().WithUrl("https://localhost:44300/ChessHub").WithAutomaticReconnect().Build();
             Connection.Closed += async (error) =>
             {
+                Debug.WriteLine("Disconnected");
                 await Task.Delay(new Random().Next(0, 5) * 1000);
                 await Connection.StartAsync();
             };
-
-            Connection.On<string>("Message", GotMessage);
-            
+            ActionReciever = new PlayerActionReciver(Connection);
         }
 
-        public void GotMessage(string message)
+        public async void Connect(Action Connected, Action<string> Failed)
         {
-            Debug.WriteLine("Got message", message);
+            try
+            {
+                await Connection.StartAsync();
+                Connected();
+                Debug.WriteLine("Connected to server");
+            }
+            catch (HttpRequestException ex)
+            {
+                Failed(ex.GetBaseException().Message);
+                Debug.WriteLine("Could not connect to server");
+            }
+
         }
 
-        public async void Connect()
+        public void SendGameAction(IGameAction action)
         {
-            await Connection.StartAsync();
-        }
-
-        public bool IsConnected()
-        {
-            return Connection.State == HubConnectionState.Connected;
-        }
-
-        public void SendMessage(string messagetype, object obj)
-        {
-            Connection.SendAsync("Send", obj);
+            action.SendOn(Connection);
         }
     }
 }

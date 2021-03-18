@@ -1,0 +1,50 @@
+﻿<Window x:Class="MultiplayerChessAppUI.Tokeninput"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MultiplayerChessAppUI"
+        mc:Ignorable="d"
+        Title="Tokeninput"          
+        Background="SandyBrown"
+        BorderBrush="White"
+        BorderThickness="3"
+        Height="230" Width="600"
+        ResizeMode="NoResize"
+
+        >
+    <Grid >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" ></ColumnDefinition>
+            <ColumnDefinition Width="auto" ></ColumnDefinition>
+            <ColumnDefinition Width="*" ></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Button 
+            Grid.Column="1" Grid.Row="2"
+            VerticalAlignment="Top"
+            Background="White"
+            BorderBrush="White"
+            MaxWidth="100"
+            MinHeight="40"
+            Name="TokenBtn"
+        >
+            Join
+        </Button>
+        <StackPanel Grid.Column="1" Grid.Row="1" MinWidth="200">
+            
+            <TextBox Name="TokenInputBox"  Grid.Column="1" Grid.Row="1" MinWidth="200" HorizontalAlignment="Center" MaxLength="10" MaxLines="1" CharacterCasing="Upper" TextWrapping="Wrap" FontSize="25" TextAlignment="Center" />
+            <TextBlock Name="TokenError"  Grid.Column="1" Grid.Row="1" Visibility="Collapsed" HorizontalAlignment="Center"  Text="Incorrect token format" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="15" Foreground="Red" Grid.RowSpan="2" Margin="0 10 0 0"/>
+        
+        </StackPanel>
+        <TextBlock Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" Text="Token:" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="30"/>
+
+
+    </Grid>
+</Window>

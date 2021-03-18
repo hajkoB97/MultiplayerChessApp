@@ -1,5 +1,4 @@
 ﻿using ChessAppLibrary.ChessPieces;
-using System;
 using System.Collections.Generic;
 
 
@@ -15,7 +14,7 @@ namespace ChessAppLibrary.Chess.ChessPieces
             this.Type = ChessPieceType.ROOK;
         }
 
-        public Rook(IChessBoard board, ChessPieceColor color, (int,int) coords) : this(board, color)
+        public Rook(IChessBoard board, ChessPieceColor color, (int, int) coords) : this(board, color)
         {
             this.Coords = coords;
         }

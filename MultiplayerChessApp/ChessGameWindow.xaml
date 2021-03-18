@@ -1,11 +1,11 @@
-﻿<Window x:Class="MultiplayerChessApp.MainWindow"
+﻿<Window x:Class="MultiplayerChessApp.ChessGameWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MultiplayerChessApp"
         mc:Ignorable="d"
-        Title="MainWindow"
+        Title="ChessGameWindow"
         SizeToContent="WidthAndHeight"
         ResizeMode="NoResize">
     <Grid Name="MainGrid">
@@ -22,10 +22,15 @@
         
         <local:ChessBoard Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Height="800" Width="800" HorizontalAlignment="Left" VerticalAlignment="Center" x:Name="ChessBoard"></local:ChessBoard>
         
-            <ScrollViewer Grid.Column="1" Grid.Row="1" MinWidth="300" Background="SlateGray">
-            <TextBlock></TextBlock>
+        <ScrollViewer Grid.Column="1" Grid.Row="1" MinWidth="300" Background="SlateGray">
+            
         </ScrollViewer>
-        
+        <StackPanel Grid.Row="2" Grid.Column="1" VerticalAlignment="Bottom">
+            <TextBlock Text="Token" Name="TokenText" FontSize="25"  Foreground="Red" FontWeight="Bold"/>
+            <TextBlock Text="PlayerName" Name="PlayerNameText"  FontSize="25"  Foreground="Red" FontWeight="Bold"/>
+            <TextBlock Text="PlayerID" Name="PlayerIdText"  FontSize="15"  Foreground="Red" FontWeight="Bold"/>
+            <TextBlock Text="GameID" Name="GameIdText"  FontSize="15"  Foreground="Red" FontWeight="Bold"/>
+        </StackPanel>
 
 
 

@@ -5,9 +5,12 @@ namespace ChessAppLibrary.Chess
 {
     public interface IPlayer
     {
-        Game CurrentGame { get; set; }
-        bool IsInGame { get; }
-        string PlayerName { get; }
+        List<IChessPiece> ChessPieces { get; }
+
+        string Id { get; }
+
+        string Name { get; }
+
         ChessPieceColor SideColor { get; set; }
     }
 }

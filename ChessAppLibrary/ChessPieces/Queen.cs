@@ -1,5 +1,4 @@
 ﻿using ChessAppLibrary.ChessPieces;
-using System;
 using System.Collections.Generic;
 
 
@@ -14,7 +13,7 @@ namespace ChessAppLibrary.Chess.ChessPieces
             this.Type = ChessPieceType.QUEEN;
         }
 
-        public Queen(IChessBoard board, ChessPieceColor color, (int,int) coords) : this(board, color)
+        public Queen(IChessBoard board, ChessPieceColor color, (int, int) coords) : this(board, color)
         {
             this.Coords = coords;
         }

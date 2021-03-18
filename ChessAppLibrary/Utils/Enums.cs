@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ChessAppLibrary
+﻿namespace ChessAppLibrary
 {
     public enum GameAction
     {
@@ -17,5 +13,10 @@ namespace ChessAppLibrary
     public enum ChessPieceColor
     {
         BLACK, WHITE
+    }
+
+    public enum GameEvent
+    {
+        GameFound, GameNotFound, GameCreated, PlayerMoved, PlayerWon, PlayerMessage
     }
 }

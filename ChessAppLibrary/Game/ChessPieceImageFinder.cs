@@ -1,7 +1,5 @@
 ﻿using ChessAppLibrary.Chess.ChessPieces;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ChessAppLibrary.Chess
 {
@@ -17,8 +15,8 @@ namespace ChessAppLibrary.Chess
             }
             else colorPrefix = "w_";
 
-            return new Uri("pack://application:,,,/MultiplayerChessAppUI;component/Resources/"+colorPrefix+piece.Type.ToString().ToLower()+".png");
+            return new Uri("pack://application:,,,/MultiplayerChessAppUI;component/Resources/" + colorPrefix + piece.Type.ToString().ToLower() + ".png");
         }
-        
+
     }
 }

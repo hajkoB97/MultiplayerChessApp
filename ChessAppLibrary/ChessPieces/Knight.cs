@@ -1,5 +1,4 @@
 ﻿using ChessAppLibrary.ChessPieces;
-using System;
 using System.Collections.Generic;
 
 
@@ -14,7 +13,7 @@ namespace ChessAppLibrary.Chess.ChessPieces
             this.Type = ChessPieceType.KNIGHT;
         }
 
-        public Knight(IChessBoard board, ChessPieceColor color, (int,int) coords) : this(board, color)
+        public Knight(IChessBoard board, ChessPieceColor color, (int, int) coords) : this(board, color)
         {
             this.Coords = coords;
         }
@@ -34,9 +33,9 @@ namespace ChessAppLibrary.Chess.ChessPieces
                 int x = currentI + X[i];
                 int y = currentJ + Y[i];
 
-                if (chessBoard.IsIndexValid(x,y))
-                    if(!chessBoard.IsSquareOccupied(x, y) || chessBoard.Board[x,y].Color != Color)
-                        validMoves.Add((x,y));
+                if (chessBoard.IsIndexValid(x, y))
+                    if (!chessBoard.IsSquareOccupied(x, y) || chessBoard.Board[x, y].Color != Color)
+                        validMoves.Add((x, y));
             }
 
             return validMoves;

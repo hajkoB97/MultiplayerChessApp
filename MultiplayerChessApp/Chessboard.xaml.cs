@@ -1,16 +1,11 @@
-﻿using ChessAppLibrary;
-using ChessAppLibrary.Chess;
+﻿using ChessAppLibrary.Chess;
 using ChessAppLibrary.Chess.ChessPieces;
 using MultiplayerChessAppUI;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace MultiplayerChessApp
@@ -21,7 +16,7 @@ namespace MultiplayerChessApp
     public partial class ChessBoard : UserControl, IChessBoardUIControl
     {
 
-        public event EventHandler<ChessPieceImageClickedArgs> ChessPieceImageClicked;
+        public event EventHandler<BoardTileClickedArgs> ChessPieceImageClicked;
 
         private static int COL_NUM = 8;
         private static int ROW_NUM = 8;
@@ -29,27 +24,14 @@ namespace MultiplayerChessApp
         private List<Shape> indicators;
         private Image[,] pieceImageBoard;
 
-        
+
         public ChessBoard()
         {
             InitializeComponent();
             pieceImageBoard = new Image[COL_NUM, ROW_NUM];
             indicators = new List<Shape>();
 
-            boardCanvas.MouseMove += Canvas_OnMouseMoved;
             boardCanvas.MouseDown += Canvas_OnMouseClick;
-            boardCanvas.MouseLeftButtonUp += Canvas_OnMouseUp;
-        }
-
-
-        private void Canvas_OnMouseUp(object sender, MouseButtonEventArgs e)
-        {
-
-        }
-
-        public void Canvas_OnMouseMoved(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            
         }
 
         public void Canvas_OnMouseClick(object sender, System.Windows.Input.MouseEventArgs e)
@@ -57,7 +39,7 @@ namespace MultiplayerChessApp
             var (i, j) = GetIndiciesFromCoords(e.GetPosition(boardCanvas).X, e.GetPosition(boardCanvas).Y);
             if (IsIndexValid(i, j))
             {
-                ChessPieceImageClicked?.Invoke(this, new ChessPieceImageClickedArgs(i, j));   
+                ChessPieceImageClicked?.Invoke(this, new BoardTileClickedArgs(i, j));
             }
 
 
@@ -95,7 +77,7 @@ namespace MultiplayerChessApp
 
         public void RemoveMoveIndicators()
         {
-            foreach(var indicator in indicators)
+            foreach (var indicator in indicators)
             {
                 boardCanvas.Children.Remove(indicator);
             }
@@ -110,19 +92,19 @@ namespace MultiplayerChessApp
 
         public void PlaceChessPieceImage(IChessPiece piece, int colIndex, int rowIndex)
         {
-            if (IsIndexValid(colIndex,rowIndex))
+            if (IsIndexValid(colIndex, rowIndex))
             {
-        
+
                 Image pieceImage = new Image();
 
 
                 var bmi = new BitmapImage();
                 bmi.BeginInit();
-                    bmi.UriSource = ChessPieceImageFinder.GetImageUriForPiece(piece);
+                bmi.UriSource = ChessPieceImageFinder.GetImageUriForPiece(piece);
                 bmi.EndInit();
 
                 pieceImage.Source = bmi;
-               
+
                 pieceImage.Height = rectSize;
                 pieceImage.Width = rectSize;
                 pieceImage.Stretch = Stretch.Fill;
@@ -139,7 +121,7 @@ namespace MultiplayerChessApp
 
         public void MovePieceImageToPosition(IChessPiece piece, int colIndex, int rowIndex)
         {
-            if(pieceImageBoard[colIndex, rowIndex] != null)
+            if (pieceImageBoard[colIndex, rowIndex] != null)
                 boardCanvas.Children.Remove(pieceImageBoard[colIndex, rowIndex]);
 
             double centerPointOffset = (rectSize / 2) - (pieceImageBoard[piece.Coords.Item1, piece.Coords.Item2].Width / 2);

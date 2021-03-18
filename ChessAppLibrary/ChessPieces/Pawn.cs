@@ -1,7 +1,6 @@
 ﻿using ChessAppLibrary.ChessPieces;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace ChessAppLibrary.Chess.ChessPieces
 {
@@ -17,7 +16,7 @@ namespace ChessAppLibrary.Chess.ChessPieces
             this.Type = ChessPieceType.PAWN;
         }
 
-        public Pawn(IChessBoard board, ChessPieceColor color, (int,int) coords) : this(board, color)
+        public Pawn(IChessBoard board, ChessPieceColor color, (int, int) coords) : this(board, color)
         {
             this.Coords = coords;
         }
@@ -29,7 +28,7 @@ namespace ChessAppLibrary.Chess.ChessPieces
 
             List<ValueTuple<int, int>> validMoves = new List<ValueTuple<int, int>>();
 
-            if (chessBoard.IsIndexValid(currentI, currentJ - 1) && !chessBoard.IsSquareOccupied(currentI, currentJ-1))
+            if (chessBoard.IsIndexValid(currentI, currentJ - 1) && !chessBoard.IsSquareOccupied(currentI, currentJ - 1))
             {
                 validMoves.Add((currentI, currentJ - 1));
 
@@ -41,23 +40,23 @@ namespace ChessAppLibrary.Chess.ChessPieces
             }
 
             //check En passant rule
-            if (chessBoard.IsIndexValid(currentI + 1, currentJ - 1) && chessBoard.IsSquareOccupied(currentI + 1, currentJ-1))
+            if (chessBoard.IsIndexValid(currentI + 1, currentJ - 1) && chessBoard.IsSquareOccupied(currentI + 1, currentJ - 1))
             {
-                if(chessBoard.Board[currentI + 1, currentJ - 1].Color != Color)
+                if (chessBoard.Board[currentI + 1, currentJ - 1].Color != Color)
                 {
                     validMoves.Add((currentI + 1, currentJ - 1));
                 }
             }
-                        
-            if (chessBoard.IsIndexValid( currentI - 1, currentJ - 1) && chessBoard.IsSquareOccupied(currentI - 1, currentJ-1))
+
+            if (chessBoard.IsIndexValid(currentI - 1, currentJ - 1) && chessBoard.IsSquareOccupied(currentI - 1, currentJ - 1))
             {
-                if(chessBoard.Board[currentI - 1, currentJ - 1].Color != Color)
+                if (chessBoard.Board[currentI - 1, currentJ - 1].Color != Color)
                 {
                     validMoves.Add((currentI - 1, currentJ - 1));
                 }
             }
 
-            return  validMoves;
+            return validMoves;
         }
 
         public override bool AttemptMove(int colIndex, int rowIndex)
@@ -68,7 +67,7 @@ namespace ChessAppLibrary.Chess.ChessPieces
                 return true;
             }
 
-            return false ;
+            return false;
         }
     }
 }

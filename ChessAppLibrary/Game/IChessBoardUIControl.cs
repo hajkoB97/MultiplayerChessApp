@@ -7,7 +7,7 @@ namespace MultiplayerChessAppUI
 {
     public interface IChessBoardUIControl
     {
-        event EventHandler<ChessPieceImageClickedArgs> ChessPieceImageClicked; 
+        event EventHandler<BoardTileClickedArgs> ChessPieceImageClicked;
         void MovePieceImageToPosition(IChessPiece piece, int colIndex, int rowIndex);
 
         void PlaceMoveIndicator(int colIndex, int rowIndex, bool enemy);

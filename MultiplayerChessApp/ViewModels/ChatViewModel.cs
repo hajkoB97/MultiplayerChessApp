@@ -1,10 +1,5 @@
 ﻿using MultiplayerChessApp.Models;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MultiplayerChessApp.ViewModels
 {
@@ -15,7 +10,8 @@ namespace MultiplayerChessApp.ViewModels
         public ObservableCollection<ChatMessage> Messages
         {
             get { return _messages; }
-            set { 
+            set
+            {
                 _messages = value;
             }
         }

@@ -4,6 +4,6 @@ namespace ChessAppLibrary.Chess
 {
     interface IChessPieceFactory
     {
-         IChessPiece GetChessPiece(ChessPieceType name, ChessPieceColor color);
+        IChessPiece GetChessPiece(ChessPieceType name, ChessPieceColor color);
     }
 }

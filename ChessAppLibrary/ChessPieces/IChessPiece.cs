@@ -7,8 +7,8 @@ namespace ChessAppLibrary.Chess.ChessPieces
     {
         ChessPieceColor Color { get; }
         ChessPieceType Type { get; }
-        (int,int) Coords { get; set; }
-        List<(int,int)> GetValidMoveIndicies();
+        (int, int) Coords { get; set; }
+        List<(int, int)> GetValidMoveIndicies();
         void MarkValidMovesWithIndicator();
         bool AttemptMove(int colIndex, int rowIndex);
     }
