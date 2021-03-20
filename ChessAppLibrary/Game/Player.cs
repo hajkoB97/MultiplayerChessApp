@@ -14,8 +14,6 @@ namespace ChessAppLibrary.Chess
 
         public ChessPieceColor SideColor { get; set; } = ChessPieceColor.WHITE;
 
-
-
         public Player(string name)
         {
             Name = name;

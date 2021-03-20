@@ -1,5 +1,6 @@
 ﻿using ChessAppLibrary.Chess;
 using ChessAppLibrary.ServerConnection;
+using ChessAppLibrary.ServerConnection.EventAggregator;
 using MultiplayerChessAppUI;
 using System;
 using System.ComponentModel;
@@ -10,10 +11,11 @@ namespace MultiplayerChessApp
     /// <summary>
     /// Interaction logic for StartUpWindow.xaml
     /// </summary>
-    public partial class StartUpWindow : Window
+    public partial class StartUpWindow : Window , IHandle<GameFoundEvent>, IHandle<GameNotFoundEvent>, IHandle<GameCreatedEvent>
     {
         SignalRClientService service;
         Player player;
+        IEventAggregator eventAggregator = EventAggregator.Get();
         public string NickName { get; private set; }
 
         public StartUpWindow(SignalRClientService service, Player player)
@@ -23,17 +25,15 @@ namespace MultiplayerChessApp
             this.player = player;
             NickName = player.Name;
 
-            service.ActionReciever.GameCreated += GameCreated;
-            service.ActionReciever.GameFound += GameFound;
-            service.ActionReciever.GameNotFound += GameNotFound;
+            eventAggregator.Subscribe(this);
         }
 
-        private void GameFound(object sender, GameFoundArgs e)
+        private void GameFound(object sender, GameFoundEvent e)
         {
             StartGameWindow(new ChessGameWindow(player, (Player)e.GameCreatorPlayer, e.GameId, service));
         }
 
-        private void GameCreated(object sender, GameFoundArgs e)
+        private void GameCreated(object sender, GameFoundEvent e)
         {
             StartGameWindow(new ChessGameWindow(player, e.GameId, e.JoinToken, service));
         }
@@ -48,12 +48,6 @@ namespace MultiplayerChessApp
             };
         }
 
-        private void GameNotFound(object sender, EventArgs e)
-        {
-            MessageBox.Show("Game Not Found");
-        }
-
-
         private void JoinRandomBtn_Click(object sender, RoutedEventArgs e)
         {
             service.SendGameAction(new FindGameAction(player.Id, player.Name));
@@ -62,10 +56,9 @@ namespace MultiplayerChessApp
         private void JoinViaTokenBtn_Click(object sender, RoutedEventArgs e)
         {
             Tokeninput input = new Tokeninput();
-            input.ShowDialog();
-
             input.TokenBtn.Click += delegate
             {
+        
                 if (input.TokenInputBox.Text.Length == 10)
                 {
                     service.SendGameAction(new JoinGameAction(player.Name, player.Id, input.TokenInputBox.Text));
@@ -76,19 +69,27 @@ namespace MultiplayerChessApp
                     input.ShowError();
                 }
             };
+            input.ShowDialog();
+
         }
 
         private void CreateNewGameBtn_Click(object sender, RoutedEventArgs e)
         {
             service.SendGameAction(new CreatePrivateGameAction(player.Name, player.Id));
         }
-
-        protected override void OnClosing(CancelEventArgs e)
+        public void Handle(GameFoundEvent message)
         {
-            service.ActionReciever.GameCreated -= GameCreated;
-            service.ActionReciever.GameFound -= GameFound;
-            service.ActionReciever.GameNotFound -= GameNotFound;
-            base.OnClosing(e);
+            StartGameWindow(new ChessGameWindow(player, (Player)message.GameCreatorPlayer, message.GameId, service));
+        }
+
+        public void Handle(GameNotFoundEvent message)
+        {
+            MessageBox.Show("Game Not Found");
+        }
+
+        public void Handle(GameCreatedEvent message)
+        {
+            StartGameWindow(new ChessGameWindow(player, message.GameId, message.JoinToken, service));
         }
     }
 }

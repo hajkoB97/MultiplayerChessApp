@@ -1,18 +1,21 @@
 ﻿using ChessAppLibrary.Chess.ChessPieces;
 using ChessAppLibrary.ServerConnection;
+using ChessAppLibrary.ServerConnection.EventAggregator;
 using ChessAppLibrary.ServerConnection.GameActions;
 using MultiplayerChessAppUI;
 using System;
 
 namespace ChessAppLibrary.Chess
 {
-    public class Game
+    public class Game : IHandle<PlayerJoinedEvent>, IHandle<PlayerMovedEvent>
     {
         public string GameId { get; private set; }
         public string JoinToken { get; private set; }
         private IPlayer PlayerOne;
         private IPlayer PlayerTwo;
         bool IsPrivate = true;
+
+        private IEventAggregator eventAggregator = EventAggregator.Get();
 
         private IServerConnection service;
 
@@ -28,7 +31,7 @@ namespace ChessAppLibrary.Chess
             AddPlayer(GameCreator);
             AddPlayer(JoinedPlayer);
             GameInstancePlayer = JoinedPlayer;
-            Init();
+            eventAggregator.Subscribe(this);
         }
 
         public Game(IChessBoardUIControl chessBoardUI, string id, IPlayer GameCreator, string token, IServerConnection service)
@@ -38,29 +41,24 @@ namespace ChessAppLibrary.Chess
             this.ChessBoard = new ChessBoard(chessBoardUI, this);
             AddPlayer(GameCreator);
             JoinToken = token;
-            service.ActionReciever.PlayerJoined += PlayerJoined;
             GameInstancePlayer = GameCreator;
-            Init();
+            eventAggregator.Subscribe(this);
         }
 
-        private void PlayerJoined(object sender, PlayerArgs e)
+        public void Handle(PlayerMovedEvent message)
         {
-            AddPlayer(new Player(e.Name, e.Id));
+            ChessBoard.MovePiece(message.From, message.To);
         }
 
-        private void Init()
+        public void Handle(PlayerJoinedEvent message)
         {
-            service.ActionReciever.PlayerMoved += PlayerMoved;
+            AddPlayer(new Player(message.Name, message.Id));
         }
 
         public void SendMoveAction((int, int) c, (int, int) d)
         {
             PlayerMovementAction action = new PlayerMovementAction(GameId, GameInstancePlayer.Id, c, d);
             service.SendGameAction(action);
-        }
-        private void PlayerMoved(object sender, PlayerMovedArgs e)
-        {
-            ChessBoard.MovePiece(e.From, e.To);
         }
 
         private bool AddPlayer(IPlayer player)
@@ -114,5 +112,6 @@ namespace ChessAppLibrary.Chess
                 }
             }
         }
+
     }
 }

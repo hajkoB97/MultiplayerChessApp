@@ -1,5 +1,6 @@
 ﻿using ChessAppLibrary.Chess;
 using ChessAppLibrary.ServerConnection;
+using ChessAppLibrary.ServerConnection.EventAggregator;
 using ChessAppLibrary.ServerConnection.GameActions;
 using MultiplayerChessApp;
 using System;
@@ -15,7 +16,7 @@ namespace MultiplayerChessAppUI
     /// <summary>
     /// Interaction logic for LogInWindow.xaml
     /// </summary>
-    public partial class LogInWindow : Window
+    public partial class LogInWindow : Window, IHandle<SuccessfulLoginEvent>
     {
         SignalRClientService service;
         Player player;
@@ -28,7 +29,9 @@ namespace MultiplayerChessAppUI
                 (error) => { MessageBox.Show(error); }
             );
 
-            service.ActionReciever.LoginSuccess += OnLoginSuccess;
+            //service.ActionReciever.LoginSuccess += OnLoginSuccess;
+            EventAggregator ea = EventAggregator.Get();
+            ea.Subscribe(this);
         }
 
         private void OnLoginSuccess(object sender, EventArgs e)
@@ -60,6 +63,13 @@ namespace MultiplayerChessAppUI
         {
             service.ActionReciever.LoginSuccess -= OnLoginSuccess;
             base.OnClosing(e);
+        }
+
+        public void Handle(SuccessfulLoginEvent message)
+        {
+            StartUpWindow window = new StartUpWindow(service, player);
+            window.Show();
+            this.Close();
         }
     }
 }

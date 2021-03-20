@@ -13,9 +13,10 @@ namespace ChessAppLibrary.ServerConnection
     public class SignalRClientService : IServerConnection
     {
         public HubConnection Connection { get; }
-        public PlayerActionReciver ActionReciever { get; private set; }
+        public GameActionReciver ActionReciever { get; private set; }
         private static readonly object padlock = new object();
         private static SignalRClientService _instance;
+        
         public static SignalRClientService Instance
         {
             get
@@ -38,7 +39,7 @@ namespace ChessAppLibrary.ServerConnection
                 await Task.Delay(new Random().Next(0, 5) * 1000);
                 await Connection.StartAsync();
             };
-            ActionReciever = new PlayerActionReciver(Connection);
+            ActionReciever = new GameActionReciver(Connection);
         }
 
         public async void Connect(Action Connected, Action<string> Failed)
